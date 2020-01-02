@@ -127,3 +127,10 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# datasets
+datasets/
+trained_models/
+
+# settings.json
+settings.json
