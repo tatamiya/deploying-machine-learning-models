@@ -2,6 +2,8 @@ import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
+from processing.errors import InvalidModelInputError
+
 
 class CategoricalImputer(BaseEstimator, TransformerMixin):
     """
@@ -129,7 +131,7 @@ class CategoricalEncoder(BaseEstimator, TransformerMixin):
             X[feature] = X[feature].map(self.encoder_dict_[feature])
         
         if X[self.variables].isnull().any().any():
-            numm_counts = X[self.variables].isnull().any()
+            null_counts = X[self.variables].isnull().any()
             vars_ = {key: value for (key, value) in null_counts.items()
                      if value is True}
             raise InvalidModelInputError(

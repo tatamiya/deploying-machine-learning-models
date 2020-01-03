@@ -6,6 +6,12 @@ from processing import preprocessors as pp
 from processing import features
 from config import config
 
+import logging
+
+
+_logger = logging.getLogger(__name__)
+
+
 price_pipe = Pipeline(
     [
         ('categorical_imputer',
