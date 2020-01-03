@@ -2,8 +2,8 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 
 import pipeline
-from data_management import load_dataset, save_pipeline
-import config
+from processing.data_management import load_dataset, save_pipeline
+from config import config
 
 
 def run_training() -> None:
@@ -24,9 +24,9 @@ def run_training() -> None:
     y_train = np.log(y_train)
     y_test = np.log(y_test)
     
-    pipeline.price_pipe.fit(X_train[config.FEATURES], y_train)
+    pipe = pipeline.price_pipe.fit(X_train[config.FEATURES], y_train)
     
-    save_pipeline(pipeline_to_persist=pipeline.price_pipe)
+    save_pipeline(pipeline_to_persist=pipe)
 
 
 if __name__ == '__main__':

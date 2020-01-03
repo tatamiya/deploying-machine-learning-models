@@ -1,9 +1,8 @@
 import numpy as np
 import pandas as pd
 
-import config
-
-from data_management import load_pipeline
+from config import config
+from processing.data_management import load_pipeline
 
 
 pipeline_file_name = 'regression_model.pkl'
@@ -14,7 +13,7 @@ def make_prediction(*, input_data) -> dict:
     """Make a predction using the saved model pipeline."""
     
     data = pd.read_json(input_data)
-    prediction = _price_pipe.predict(data[config.Features])
+    prediction = _price_pipe.predict(data[config.FEATURES])
     output = np.exp(prediction)
     response = {'predictions': output}
     

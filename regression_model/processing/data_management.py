@@ -2,7 +2,7 @@ import pandas as pd
 import joblib
 from sklearn.pipeline import Pipeline
 
-import config
+from config import config
 
 
 def load_dataset(*, file_name: str
