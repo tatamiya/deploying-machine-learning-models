@@ -58,3 +58,10 @@ CATEGORICAL_NA_NOT_ALLOWED = [
      feature for feature in CATEGORICAL_VARS
      if feature not in CATEGORICAL_VARS_WITH_NA
  ]
+
+
+PIPELINE_NAME = 'lasso_regression'
+PIPELINE_SAVE_FILE = f'{PIPELINE_NAME}_output_v'
+
+# used for different testing
+ACCEPTABLE_MODEL_DIFFERENCE = 0.05

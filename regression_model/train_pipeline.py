@@ -4,6 +4,12 @@ from sklearn.model_selection import train_test_split
 import pipeline
 from processing.data_management import load_dataset, save_pipeline
 from config import config
+from config import __version__ as _version
+
+import logging
+
+
+_logger = logging.getLogger(__name__)
 
 
 def run_training() -> None:
@@ -26,6 +32,7 @@ def run_training() -> None:
     
     pipe = pipeline.price_pipe.fit(X_train[config.FEATURES], y_train)
     
+    _logger.info(f'saving model version: {_version}')
     save_pipeline(pipeline_to_persist=pipe)
 
 
