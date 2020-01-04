@@ -4,7 +4,7 @@ from sklearn.preprocessing import MinMaxScaler
 
 from processing import preprocessors as pp
 from processing import features
-from config import config
+from regression_model.config import config
 
 import logging
 
