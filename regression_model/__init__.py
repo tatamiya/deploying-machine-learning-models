@@ -1,8 +1,7 @@
 import logging
-# import os
+import os
 
-# from config import config
-from config import logging_config
+from regression_model.config import config, logging_config
 
 
 # Configure logger for use in package
@@ -12,5 +11,5 @@ logger.addHandler(logging_config.get_console_handler())
 logger.propagate = False
 
 
-# with open(os.path.join(config.PACKAGE_ROOT, 'VERSION')) as version_file:
-#    __version__ = version_file.read().strip()
+with open(os.path.join(config.PACKAGE_ROOT, 'VERSION')) as version_file:
+    __version__ = version_file.read().strip()

@@ -3,7 +3,7 @@ from logging.handlers import TimedRotatingFileHandler
 import os
 import sys
 
-from config import config
+from regression_model.config import config
 
 
 FORMATTER = logging.Formatter(

@@ -134,3 +134,4 @@ trained_models/
 
 # settings.json
 settings.json
+.DS_Store

@@ -1,15 +1,12 @@
 import numpy as np
 import pandas as pd
 
-from config import config
 from processing.data_management import load_pipeline
 from processing.validation import validate_inputs
-from config import __version__ as _version
+from regression_model.config import config
+from regression_model import __version__ as _version
+from regression_model import logger as _logger
 
-import logging
-
-
-_logger = logging.getLogger(__name__)
 
 pipeline_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
 _price_pipe = load_pipeline(file_name=pipeline_file_name)
