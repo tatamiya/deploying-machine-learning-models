@@ -5,11 +5,7 @@ import pipeline
 from processing.data_management import load_dataset, save_pipeline
 from regression_model.config import config
 from regression_model import __version__ as _version
-
-import logging
-
-
-_logger = logging.getLogger(__name__)
+from regression_model import logger as _logger
 
 
 def run_training() -> None:

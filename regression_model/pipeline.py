@@ -5,11 +5,7 @@ from sklearn.preprocessing import MinMaxScaler
 from processing import preprocessors as pp
 from processing import features
 from regression_model.config import config
-
-import logging
-
-
-_logger = logging.getLogger(__name__)
+from regression_model import logger as _logger
 
 
 price_pipe = Pipeline(
