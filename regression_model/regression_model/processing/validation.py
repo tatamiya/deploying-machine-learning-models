@@ -1,6 +1,6 @@
 import pandas as pd
 
-from config import config
+from regression_model.config import config
 
 
 def validate_inputs(input_data: pd.DataFrame) -> pd.DataFrame:
