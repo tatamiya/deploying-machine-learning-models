@@ -130,8 +130,11 @@ dmypy.json
 
 # datasets
 datasets/
-trained_models/
 
 # settings.json
 settings.json
 .DS_Store
+
+# datafiles
+train.csv
+test.csv
