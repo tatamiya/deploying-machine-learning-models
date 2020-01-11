@@ -9,3 +9,6 @@ wheel>=0.32.3
 
 # testing
 pytest>=4.6.6
+
+# fetching datasets
+kaggle>=1.5.1.1
