@@ -34,6 +34,11 @@ jobs:
             pip install -r regression_model/requirements.txt
       - *fetch_data
       - run:
+          name: Train model
+          command: |
+            . venv/bin/activate
+            PYTHONPATH=./regression_model python3 regression_model/regression_model/train_pipeline.py
+      - run:
           name: Run tests
           command: |
             . venv/bin/activate
@@ -83,7 +88,7 @@ jobs:
             chmod +x ./scripts/publish_model.sh
             ./scripts/publish_model.sh ./regression_model/
 
-  section_9_differentail_tests:
+  section_9_differential_tests:
     <<: *defaults
     steps:
       - checkout
@@ -100,7 +105,7 @@ jobs:
             . venv/bin/activate
             export PYTHONPATH="$(pwd)/ml_api:$PYTHONPATH"
             pip install -r ml_api/requirements.txt
-            pytest -vv ml_api/tests -m differentail
+            pytest -vv ml_api/tests -m differential
 
 workflows:
   version: 2
@@ -108,9 +113,13 @@ workflows:
     jobs:
       - test_regression_model
       - test_ml_api
-      - section_9_differentail_tests
+      - section_9_differential_tests
       - train_and_upload_regression_model:
           requires:
             - test_regression_model
             - test_ml_api
-            - sectin_9_differentail_tests
+            - section_9_differential_tests
+          filters:
+            branches:
+              only:
+                - master
