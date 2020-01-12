@@ -35,6 +35,8 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test with pytest
       run: |
+        export PYTHONPATH="$(pwd)/regression_model:$PYTHONPATH"
+        python regression_model/regression_model/train_pipeline.py
         pytest -vv regression_model/regression_model/tests
   
   test_ml_api:
