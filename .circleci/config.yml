@@ -50,7 +50,7 @@ jobs:
       - run:
           name: Running tests
           command: |
-            virtualenv venv
+            python3 -m venv venv
             . venv/bin/activate
             export PYTHONPATH="$(pwd)/ml_api:$PYTHONPATH"
             pip install --upgrade pip
@@ -83,13 +83,34 @@ jobs:
             chmod +x ./scripts/publish_model.sh
             ./scripts/publish_model.sh ./regression_model/
 
+  section_9_differentail_tests:
+    <<: *defaults
+    steps:
+      - checkout
+      - *prepare_venv
+      - run:
+          name: Capture previous model predictions
+          command: |
+            . venv/bin/activate
+            pip install -r ml_api/diff_test_requirements.txt
+            PYTHONPATH=./ml_api python3 ml_api/tests/capture_model_predictions.py
+      - run:
+          name: Running differential tests
+          command: |
+            . venv/bin/activate
+            export PYTHONPATH="$(pwd)/ml_api:$PYTHONPATH"
+            pip install -r ml_api/requirements.txt
+            pytest -vv ml_api/tests -m differentail
+
 workflows:
   version: 2
   test-all:
     jobs:
       - test_regression_model
       - test_ml_api
+      - section_9_differentail_tests
       - train_and_upload_regression_model:
           requires:
             - test_regression_model
             - test_ml_api
+            - sectin_9_differentail_tests
