@@ -1,7 +1,26 @@
 [tool.poetry]
 authors = ["tatamiya <tamyuji1002@gmail.com>"]
-description = ""
+classifiers = [
+  # Trove classifiers
+  'License :: OSI Approved :: MIT License',
+  'Programming Language :: Python',
+  'Programming Language :: Python :: 3',
+  'Programming Language :: Python :: 3.6',
+  'Programming Language :: Python :: Implementation :: CPython',
+  'Programming Language :: Python :: Implementation :: PyPy',
+]
+description = "Train and deploy regression model."
+include = [
+  "*.txt",
+  "*.md",
+  "*.pkl",
+  "regression_model/datasets/train.csv",
+  "regression_model/datasets/test.csv",
+  "regression_model/trained_models/*.pkl",
+]
+license = "MIT"
 name = "regression_model"
+readme = "README.md"
 version = "1.1.0"
 
 [tool.poetry.dependencies]
