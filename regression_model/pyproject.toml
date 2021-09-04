@@ -1,0 +1,25 @@
+[tool.poetry]
+authors = ["tatamiya <tamyuji1002@gmail.com>"]
+description = ""
+name = "regression_model"
+version = "1.1.0"
+
+[tool.poetry.dependencies]
+matplotlib = ">=3.0.2"
+pandas = ">=0.23.4"
+python = "^3.8"
+scikit-learn = ">=0.20.2"
+
+[tool.poetry.dev-dependencies]
+black = "^21.8b0"
+flake8 = "^3.9.2"
+isort = "^5.9.3"
+kaggle = ">=1.5.1.1"
+mypy = "^0.910"
+pytest = ">=4.6.6"
+setuptools = ">=40.6.3"
+wheel = ">=0.32."
+
+[build-system]
+build-backend = "poetry.core.masonry.api"
+requires = ["poetry-core>=1.0.0"]
