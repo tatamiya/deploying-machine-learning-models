@@ -1,4 +1,4 @@
-FROM python:3.7.4
+FROM python:3.9.7
 
 # Create the user that will run the app
 RUN adduser --disabled-password --gecos 'tatamiya' ml-api-user
