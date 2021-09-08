@@ -11,3 +11,6 @@ regression-model==1.1.0
 
 # Deployment
 gunicorn>=19.9.0
+
+# test
+pytest >=4.6.6
