@@ -10,6 +10,9 @@ jobs:
       max-parallel: 4
       matrix:
         python-version: [3.8, 3.9]
+    defaults:
+      run:
+        working-directory: ./regression_model
 
     steps:
       - uses: actions/checkout@v1
@@ -23,9 +26,10 @@ jobs:
           KAGGLE_KEY: ${{ secrets.KAGGLE_KEY }}
         run: |
           python -m pip install --upgrade pip
-          pip install -r regression_model/requirements.txt
-          chmod +x ./scripts/fetch_kaggle_dataset.sh
-          ./scripts/fetch_kaggle_dataset.sh
+          pip install poetry
+          poetry install
+          chmod +x ../scripts/fetch_kaggle_dataset.sh
+          ../scripts/fetch_kaggle_dataset.sh
       - name: Lint with flake8
         run: |
           pip install flake8
@@ -35,9 +39,8 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          export PYTHONPATH="$(pwd)/regression_model:$PYTHONPATH"
-          python regression_model/regression_model/train_pipeline.py
-          pytest -vv regression_model/regression_model/tests
+          poetry run python regression_model/train_pipeline.py
+          poetry run pytest -vv regression_model/tests
 
   test_ml_api:
     name: Test ML API
