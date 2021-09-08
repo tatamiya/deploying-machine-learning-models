@@ -21,7 +21,7 @@ include = [
 license = "MIT"
 name = "regression_model"
 readme = "README.md"
-url = "https://github.com/tatamiya/deploying-machine-learning-models"
+repository = "https://github.com/tatamiya/deploying-machine-learning-models"
 version = "1.1.0"
 
 [tool.poetry.dependencies]
