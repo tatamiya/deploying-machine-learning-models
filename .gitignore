@@ -145,3 +145,6 @@ logs/
 
 # trained_models (will be created in CI)
 regression_model/regression_model/trained_models/*.pkl
+
+# CircleCI local execution
+process.yaml
