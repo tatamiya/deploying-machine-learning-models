@@ -150,7 +150,7 @@ workflows:
             - section_12_publish_docker_image_to_aws
           family: "first-run-task-definition"
           cluster-name: "ml-api-cluster"
-          container-image-name-updates: "container=udemy-ml-api,tag=$(shell git rev-parse HEAD)"
+          container-image-name-updates: "container=custom,tag=$(shell git rev-parse HEAD)"
           filters:
             branches:
               only:
