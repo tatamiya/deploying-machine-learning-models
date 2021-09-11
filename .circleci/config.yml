@@ -151,7 +151,7 @@ workflows:
           family: "first-run-task-definition"
           service-name: "custom-service"
           cluster-name: "ml-api-cluster"
-          container-image-name-updates: "container=custom,tag=$(shell git rev-parse HEAD)"
+          container-image-name-updates: "container=custom,tag=<< pipeline.git.revision >>"
           filters:
             branches:
               only:
