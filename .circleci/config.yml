@@ -121,10 +121,6 @@ jobs:
             sudo pip install awscli
             eval $(aws ecr get-login --no-include-email --region ap-northeast-1)
             make build-ml-api-aws tag-ml-api push-ml-api-aws
-      - aws-ecs/update-service:
-          family: "custom-service"
-          cluster-name: "ml-api-cluster"
-          container-image-name-updates: "container=${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/udemy-ml-api,tag=$(shell git rev-parse HEAD)"
 
 workflows:
   version: 2
@@ -145,6 +141,16 @@ workflows:
       - section_12_publish_docker_image_to_aws:
           requires:
             - train_and_upload_regression_model
+          filters:
+            branches:
+              only:
+                - master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - section_12_publish_docker_image_to_aws
+          family: "custom-service"
+          cluster-name: "ml-api-cluster"
+          container-image-name-updates: "container=${AWS_ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/udemy-ml-api,tag=$(shell git rev-parse HEAD)"
           filters:
             branches:
               only:
