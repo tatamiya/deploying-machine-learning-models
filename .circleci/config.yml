@@ -124,23 +124,24 @@ jobs:
 
 workflows:
   version: 2
-  test-all:
+  test-and-upload-regression-model:
     jobs:
       - test_regression_model
-      - test_ml_api
-      - differential_tests
       - train_and_upload_regression_model:
           requires:
             - test_regression_model
-            - test_ml_api
-            - differential_tests
           filters:
             branches:
               only:
                 - master
+  test-and-deploy-api:
+    jobs:
+      - test_ml_api
+      - differential_tests
       - publish_api_docker_image_to_aws_ecr:
           requires:
-            - train_and_upload_regression_model
+            - test_ml_api
+            - differential_tests
           filters:
             branches:
               only:
