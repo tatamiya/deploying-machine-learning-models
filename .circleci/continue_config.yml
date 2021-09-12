@@ -129,6 +129,13 @@ jobs:
             sudo pip install awscli
             eval $(aws ecr get-login --no-include-email --region ap-northeast-1)
             make build-ml-api-aws tag-ml-api push-ml-api-aws
+  no-job-echo:
+    <<: *defaults
+    steps:
+      - run:
+          name: Publishing docker image to AWS ECR
+          command: |
+            echo "No job to run"
 
 workflows:
   version: 2
@@ -169,7 +176,7 @@ workflows:
                 - master
   echo:
     jobs:
-      - echo "No job to run"
+      - no-job-echo
     when:
       and:
         - not: << pipeline.parameters.run-regression-model-jobs >>
