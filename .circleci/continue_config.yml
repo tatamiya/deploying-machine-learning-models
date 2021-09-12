@@ -167,3 +167,10 @@ workflows:
             branches:
               only:
                 - master
+  echo:
+    jobs:
+      - echo "No job to run"
+    when:
+      and:
+        - not: << pipeline.parameters.run-regression-model-jobs >>
+        - not: << pipeline.parameters.run-api-jobs >>
