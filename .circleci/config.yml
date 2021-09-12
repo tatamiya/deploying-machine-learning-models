@@ -90,7 +90,7 @@ jobs:
             poetry build -f sdist
             poetry publish --repository regression_model
 
-  section_9_differential_tests:
+  differential_tests:
     <<: *defaults
     steps:
       - checkout
@@ -109,7 +109,7 @@ jobs:
             pip install -r ml_api/requirements.txt
             pytest -vv ml_api/tests -m differential
 
-  section_12_publish_docker_image_to_aws:
+  publish_api_docker_image_to_aws_ecr:
     <<: *defaults
     working_directory: ~/project/ml_models
     steps:
@@ -128,17 +128,17 @@ workflows:
     jobs:
       - test_regression_model
       - test_ml_api
-      - section_9_differential_tests
+      - differential_tests
       - train_and_upload_regression_model:
           requires:
             - test_regression_model
             - test_ml_api
-            - section_9_differential_tests
+            - differential_tests
           filters:
             branches:
               only:
                 - master
-      - section_12_publish_docker_image_to_aws:
+      - publish_api_docker_image_to_aws_ecr:
           requires:
             - train_and_upload_regression_model
           filters:
@@ -147,7 +147,7 @@ workflows:
                 - master
       - aws-ecs/deploy-service-update:
           requires:
-            - section_12_publish_docker_image_to_aws
+            - publish_api_docker_image_to_aws_ecr
           family: "first-run-task-definition"
           service-name: "custom-service"
           cluster-name: "ml-api-cluster"
