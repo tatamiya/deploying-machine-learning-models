@@ -3,6 +3,14 @@ version: 2.1
 orbs:
   aws-ecs: circleci/aws-ecs@2.2.1
 
+parameters:
+  run-regression-model-jobs:
+    type: boolean
+    default: false
+  run-api-jobs:
+    type: boolean
+    default: false
+
 defaults: &defaults
   docker:
     - image: circleci/python:3.9.7
@@ -125,6 +133,7 @@ jobs:
 workflows:
   version: 2
   test-and-upload-regression-model:
+    when: << pipeline.parameters.run-regression-model-jobs >>
     jobs:
       - test_regression_model
       - train_and_upload_regression_model:
@@ -135,6 +144,7 @@ workflows:
               only:
                 - master
   test-and-deploy-api:
+    when: << pipeline.parameters.run-api-jobs >>
     jobs:
       - test_ml_api
       - differential_tests
