@@ -1,0 +1,183 @@
+version: 2.1
+
+orbs:
+  aws-ecs: circleci/aws-ecs@2.2.1
+
+parameters:
+  run-regression-model-jobs:
+    type: boolean
+    default: false
+  run-api-jobs:
+    type: boolean
+    default: false
+
+defaults: &defaults
+  docker:
+    - image: circleci/python:3.9.7
+  working_directory: ~/project
+
+prepare_venv: &prepare_venv
+  run:
+    name: Create venv
+    command: |
+      python3 -m venv venv
+      source venv/bin/activate
+      pip install --upgrade pip
+      pip install poetry
+
+fetch_data: &fetch_data
+  run:
+    name: Set script permission and fetch data
+    command: |
+      chmod +x ~/project/scripts/fetch_kaggle_dataset.sh
+      ~/project/scripts/fetch_kaggle_dataset.sh
+
+jobs:
+  test_regression_model:
+    <<: *defaults
+    working_directory: ~/project/regression_model
+    steps:
+      - checkout:
+          path: ~/project
+      - *prepare_venv
+      - run:
+          name: Install requirements
+          command: |
+            poetry install
+      - *fetch_data
+      - run:
+          name: Train model
+          command: |
+            poetry run python regression_model/train_pipeline.py
+      - run:
+          name: Run tests
+          command: |
+            poetry run pytest -vv regression_model/tests
+
+  test_ml_api:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - py-deps-{{ checksum "ml_api/requirements.txt" }}
+      - run:
+          name: Running tests
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            export PYTHONPATH="$(pwd)/ml_api:$PYTHONPATH"
+            pip install --upgrade pip
+            pip install -r ml_api/requirements.txt
+            pytest -vv ml_api/tests -m "not differential"
+      - save_cache:
+          key: py-deps-{{ checksum "ml_api/requirements.txt" }}
+          paths:
+            - "/venv"
+  train_and_upload_regression_model:
+    <<: *defaults
+    working_directory: ~/project/regression_model
+    steps:
+      - checkout:
+          path: ~/project
+      - *prepare_venv
+      - run:
+          name: Install requirements
+          command: |
+            poetry install
+      - *fetch_data
+      - run:
+          name: Train model
+          command: |
+            poetry run python regression_model/train_pipeline.py
+      - run:
+          name: Publish model to Gemfury
+          command: |
+            poetry config repositories.regression_model $EXTRA_REPOSITORY_URL
+            poetry config http-basic.regression_model $EXTRA_REPOSITORY_TOKEN ""
+            poetry build -f sdist
+            poetry publish --repository regression_model
+
+  differential_tests:
+    <<: *defaults
+    steps:
+      - checkout
+      - *prepare_venv
+      - run:
+          name: Capture previous model predictions
+          command: |
+            . venv/bin/activate
+            pip install -r ml_api/diff_test_requirements.txt
+            PYTHONPATH=./ml_api python3 ml_api/tests/capture_model_predictions.py
+      - run:
+          name: Running differential tests
+          command: |
+            . venv/bin/activate
+            export PYTHONPATH="$(pwd)/ml_api:$PYTHONPATH"
+            pip install -r ml_api/requirements.txt
+            pytest -vv ml_api/tests -m differential
+
+  publish_api_docker_image_to_aws_ecr:
+    <<: *defaults
+    working_directory: ~/project/ml_models
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Publishing docker image to AWS ECR
+          command: |
+            sudo pip install awscli
+            eval $(aws ecr get-login --no-include-email --region ap-northeast-1)
+            make build-ml-api-aws tag-ml-api push-ml-api-aws
+  no-job-echo:
+    <<: *defaults
+    steps:
+      - run:
+          name: Publishing docker image to AWS ECR
+          command: |
+            echo "No job to run"
+
+workflows:
+  version: 2
+  test-and-upload-regression-model:
+    when: << pipeline.parameters.run-regression-model-jobs >>
+    jobs:
+      - test_regression_model
+      - train_and_upload_regression_model:
+          requires:
+            - test_regression_model
+          filters:
+            branches:
+              only:
+                - master
+  test-and-deploy-api:
+    when: << pipeline.parameters.run-api-jobs >>
+    jobs:
+      - test_ml_api
+      - differential_tests
+      - publish_api_docker_image_to_aws_ecr:
+          requires:
+            - test_ml_api
+            - differential_tests
+          filters:
+            branches:
+              only:
+                - master
+      - aws-ecs/deploy-service-update:
+          requires:
+            - publish_api_docker_image_to_aws_ecr
+          family: "first-run-task-definition"
+          service-name: "custom-service"
+          cluster-name: "ml-api-cluster"
+          container-image-name-updates: "container=custom,tag=<< pipeline.git.revision >>"
+          filters:
+            branches:
+              only:
+                - master
+  echo:
+    jobs:
+      - no-job-echo
+    when:
+      and:
+        - not: << pipeline.parameters.run-regression-model-jobs >>
+        - not: << pipeline.parameters.run-api-jobs >>
