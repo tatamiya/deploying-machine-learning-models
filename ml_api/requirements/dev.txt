@@ -1,0 +1,10 @@
+-r prod.txt
+
+# test
+pytest >=4.6.6
+
+# linters
+black>=21.8b0
+flake8>=3.9.2
+isort>=5.9.3
+mypy>=0.910
