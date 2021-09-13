@@ -1,11 +1,11 @@
 import numpy as np
-import pipeline
-from processing.data_management import load_dataset, save_pipeline
 from sklearn.model_selection import train_test_split
 
 from regression_model import __version__ as _version
 from regression_model import logger as _logger
+from regression_model import pipeline
 from regression_model.config import config
+from regression_model.processing.data_management import load_dataset, save_pipeline
 
 
 def run_training() -> None:
