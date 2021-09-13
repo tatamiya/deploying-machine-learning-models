@@ -33,6 +33,34 @@ fetch_data: &fetch_data
       ~/project/scripts/fetch_kaggle_dataset.sh
 
 jobs:
+  lint_regression_model:
+    <<: *defaults
+    working_directory: ~/project/regression_model
+    steps:
+      - checkout:
+          path: ~/project
+      - *prepare_venv
+      - run:
+          name: Install requirements
+          command: |
+            poetry install
+      - run:
+          name: Black
+          command: |
+            poetry run black --check regression_model/
+      - run:
+          name: Flake8
+          command: |
+            poetry run flake8 --exit-zero --count --max-line-length=88 --show-source --statistics regression_model/
+      - run:
+          name: isort
+          command: |
+            poetry run isort --check-only --profile black regression_model/
+      - run:
+          name: mypy
+          command: |
+            poetry run mypy --ignore-missing-imports regression_model/
+
   test_regression_model:
     <<: *defaults
     working_directory: ~/project/regression_model
@@ -142,6 +170,7 @@ workflows:
   test-and-upload-regression-model:
     when: << pipeline.parameters.run-regression-model-jobs >>
     jobs:
+      - lint_regression_model
       - test_regression_model
       - train_and_upload_regression_model:
           requires:
