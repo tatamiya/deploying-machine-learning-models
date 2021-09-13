@@ -7,8 +7,7 @@ from regression_model.config import config
 
 
 FORMATTER = logging.Formatter(
-    "%(asctime)s - %(name)s - %(levelname)s -"
-    "%(funcName)s:%(lineno)d - %(message)s"
+    "%(asctime)s - %(name)s - %(levelname)s -" "%(funcName)s:%(lineno)d - %(message)s"
 )
 
 
