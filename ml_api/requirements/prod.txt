@@ -1,0 +1,9 @@
+--extra-index-url=${PIP_EXTRA_INDEX_URL}
+
+-r common.txt
+
+# Deployment
+gunicorn>=19.9.0
+
+# Install from gemfury
+regression-model==1.1.4
