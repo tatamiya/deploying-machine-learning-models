@@ -3,7 +3,6 @@ from importlib import metadata
 
 from regression_model.config import logging_config
 
-
 # Configure logger for use in package
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
