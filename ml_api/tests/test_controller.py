@@ -1,9 +1,9 @@
-from regression_model.config import config as model_config
-from regression_model.processing.data_management import load_dataset
-from regression_model import __version__ as _version
-
 import json
 import math
+
+from regression_model import __version__ as _version
+from regression_model.config import config as model_config
+from regression_model.processing.data_management import load_dataset
 
 from api import __version__ as api_version
 

@@ -1,7 +1,6 @@
-from marshmallow import Schema, fields
-from marshmallow import ValidationError
-
 import typing as t
+
+from marshmallow import Schema, ValidationError, fields
 
 
 class InvalidInputError(Exception):
