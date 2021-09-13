@@ -1,9 +1,5 @@
 import logging
-from logging.handlers import TimedRotatingFileHandler
-import os
 import sys
-
-from regression_model.config import config
 
 
 FORMATTER = logging.Formatter(
