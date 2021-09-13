@@ -7,7 +7,7 @@ from api.config import TestingConfig
 @pytest.fixture
 def app():
     app = create_app(config_object=TestingConfig)
-    
+
     with app.app_context():
         yield app
 
