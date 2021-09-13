@@ -1,25 +1,28 @@
+import typing as t
+
 import numpy as np
 import pandas as pd
 
-from regression_model.processing.data_management import load_pipeline
-from regression_model.processing.validation import validate_inputs
-from regression_model.config import config
 from regression_model import __version__ as _version
 from regression_model import logger as _logger
-import typing as t
+from regression_model.config import config
+from regression_model.processing.data_management import load_pipeline
+from regression_model.processing.validation import validate_inputs
 
-
-pipeline_file_name = f'{config.PIPELINE_SAVE_FILE}{_version}.pkl'
+pipeline_file_name = f"{config.PIPELINE_SAVE_FILE}{_version}.pkl"
 _price_pipe = load_pipeline(file_name=pipeline_file_name)
 
 
-def make_prediction(*, input_data: t.Union[pd.DataFrame, dict],) -> dict:
+def make_prediction(
+    *,
+    input_data: t.Union[pd.DataFrame, dict],
+) -> dict:
     """
     Make a prediction using a saved model pipeline.
-    
+
     Args:
         input_data: Array of model prediction inputs.
-    
+
     Returns:
         Predictions for each input row, as well as the model version.
     """
@@ -31,12 +34,12 @@ def make_prediction(*, input_data: t.Union[pd.DataFrame, dict],) -> dict:
 
     output = np.exp(prediction)
 
-    results = {'predictions': output, 'version': _version}
-    
+    results = {"predictions": output, "version": _version}
+
     _logger.info(
-        f'Making predictions with model version: {_version} '
-        f'Inputs: {validated_data} '
-        f'Predictions: {results}'
+        f"Making predictions with model version: {_version} "
+        f"Inputs: {validated_data} "
+        f"Predictions: {results}"
     )
-    
+
     return results
