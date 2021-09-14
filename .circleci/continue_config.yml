@@ -82,6 +82,35 @@ jobs:
           command: |
             poetry run pytest -vv regression_model/tests
 
+  lint_api:
+    <<: *defaults
+    working_directory: ~/project/ml_api
+    steps:
+      - checkout:
+          path: ~/project
+      - *prepare_venv
+      - run:
+          name: Install requirements
+          command: |
+            pip install --upgrade pip
+            pip install -r requirements/dev.txt
+      - run:
+          name: Black
+          command: |
+            black --check .
+      - run:
+          name: Flake8
+          command: |
+            flake8 --exit-zero --count --max-line-length=88 --show-source --statistics ./**/*.py
+      - run:
+          name: isort
+          command: |
+            isort --check-only --profile black .
+      - run:
+          name: mypy
+          command: |
+            mypy --ignore-missing-imports --namespace-packages --explicit-package-bases .
+
   test_ml_api:
     <<: *defaults
     steps:
@@ -102,6 +131,7 @@ jobs:
           key: py-deps-{{ checksum "ml_api/requirements/prod.txt" }}
           paths:
             - "/venv"
+
   train_and_upload_regression_model:
     <<: *defaults
     working_directory: ~/project/regression_model
@@ -157,6 +187,7 @@ jobs:
             sudo pip install awscli
             eval $(aws ecr get-login --no-include-email --region ap-northeast-1)
             make build-ml-api-aws tag-ml-api push-ml-api-aws
+
   no-job-echo:
     <<: *defaults
     steps:
@@ -183,10 +214,12 @@ workflows:
   test-and-deploy-api:
     when: << pipeline.parameters.run-api-jobs >>
     jobs:
+      - lint_api
       - test_ml_api
       - differential_tests
       - publish_api_docker_image_to_aws_ecr:
           requires:
+            - lint_api
             - test_ml_api
             - differential_tests
           filters:
