@@ -1,1 +1,1 @@
--r ml_api/requirements.txt
+-r ml_api/requirements/prod.txt
