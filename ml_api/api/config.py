@@ -1,8 +1,9 @@
 import logging
-from logging.handlers import TimedRotatingFileHandler
-import pathlib
 import os
+import pathlib
 import sys
+from logging.handlers import TimedRotatingFileHandler
+from typing import Union
 
 PACKAGE_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -46,7 +47,7 @@ class Config:
     TESTING = False
     CSRF_ENABLED = True
     SECRET_KEY = ""
-    SERVER_PORT = 5000
+    SERVER_PORT: Union[str, int] = 5000
 
 
 class ProductionConfig(Config):

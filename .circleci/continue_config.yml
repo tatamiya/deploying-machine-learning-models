@@ -88,7 +88,7 @@ jobs:
       - checkout
       - restore_cache:
           keys:
-            - py-deps-{{ checksum "ml_api/requirements.txt" }}
+            - py-deps-{{ checksum "ml_api/requirements/prod.txt" }}
       - run:
           name: Running tests
           command: |
@@ -96,10 +96,10 @@ jobs:
             . venv/bin/activate
             export PYTHONPATH="$(pwd)/ml_api:$PYTHONPATH"
             pip install --upgrade pip
-            pip install -r ml_api/requirements.txt
+            pip install -r ml_api/requirements/dev.txt
             pytest -vv ml_api/tests -m "not differential"
       - save_cache:
-          key: py-deps-{{ checksum "ml_api/requirements.txt" }}
+          key: py-deps-{{ checksum "ml_api/requirements/prod.txt" }}
           paths:
             - "/venv"
   train_and_upload_regression_model:
@@ -135,14 +135,14 @@ jobs:
           name: Capture previous model predictions
           command: |
             . venv/bin/activate
-            pip install -r ml_api/diff_test_requirements.txt
+            pip install -r ml_api/requirements/diff_test.txt
             PYTHONPATH=./ml_api python3 ml_api/tests/capture_model_predictions.py
       - run:
           name: Running differential tests
           command: |
             . venv/bin/activate
             export PYTHONPATH="$(pwd)/ml_api:$PYTHONPATH"
-            pip install -r ml_api/requirements.txt
+            pip install -r ml_api/requirements/dev.txt
             pytest -vv ml_api/tests -m differential
 
   publish_api_docker_image_to_aws_ecr:
