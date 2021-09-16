@@ -1,20 +1,21 @@
-from flask import Flask
+from fastapi import FastAPI
 
+from api import __version__ as api_version
 from api.config import get_logger
 
 _logger = get_logger(logger_name=__name__)
 
 
-def create_app(*, config_object) -> Flask:
-    """Create a flask app instance."""
+def create_app(*, config_object) -> FastAPI:
+    """Create a FastAPI app instance."""
 
-    flask_app = Flask("ml_api")
-    flask_app.config.from_object(config_object)
+    app = FastAPI(title="ml_api", version=api_version)
 
     # import blueprints
-    from .controller import prediction_app
+    from api import controller
 
-    flask_app.register_blueprint(prediction_app)
+    app.include_router(controller.router)
+
     _logger.debug("Application instance created")
 
-    return flask_app
+    return app
