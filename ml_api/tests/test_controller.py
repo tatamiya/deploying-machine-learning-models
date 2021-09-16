@@ -1,11 +1,10 @@
 import json
 import math
 
+from api import __version__ as api_version
 from regression_model import __version__ as _version
 from regression_model.config import config as model_config
 from regression_model.processing.data_management import load_dataset
-
-from api import __version__ as api_version
 
 
 def test_health_endpoint_returns_200(test_client):
@@ -14,7 +13,7 @@ def test_health_endpoint_returns_200(test_client):
 
     # Then
     assert response.status_code == 200
-    assert response.json() == "OK"
+    assert response.json() == "ok"
 
 
 def test_version_endpoint_returns_version(test_client):
