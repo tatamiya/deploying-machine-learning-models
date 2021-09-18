@@ -9,15 +9,9 @@ from api import __version__ as api_version
 from api.config import get_logger, settings
 from api.schema import HouseData, PredictionResults, Version
 
-router = APIRouter(prefix="")
+router = APIRouter(prefix=settings.VERSIONED_PREFIX)
 
 _logger = get_logger(logger_name=__name__)
-
-
-@router.get("/health")
-async def health():
-    _logger.info("health status OK")
-    return "ok"
 
 
 @router.get("/version", response_model=Version)
@@ -25,9 +19,7 @@ async def version():
     return {"model_version": _version, "api_version": api_version}
 
 
-@router.post(
-    f"{settings.VERSIONED_PREFIX}/predict/regression", response_model=PredictionResults
-)
+@router.post("/predict/regression", response_model=PredictionResults)
 async def predict(data: List[HouseData]):
 
     _logger.debug(f"Inputs: {data}")
