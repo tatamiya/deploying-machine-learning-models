@@ -10,7 +10,9 @@ from api import config
 
 
 @pytest.mark.differential
-def test_model_prediction_differentail(*, save_file: str = "test_data_predictions.csv"):
+def test_model_prediction_differentail(
+    *, save_file: Optional[str] = "test_data_predictions.csv"
+):
     """
     This test compares the prediction result similarity of
     the current model with the previous model's results.

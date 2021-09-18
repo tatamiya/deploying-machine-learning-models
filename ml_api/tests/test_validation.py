@@ -21,6 +21,4 @@ def test_prediction_endpoint_validation_200(test_client):
     response_json = response.json()
 
     # Check correct number of errors removed
-    assert len(response_json.get("predictions")) + len(
-        response_json.get("errors")
-    ) == len(test_data)
+    assert response_json.get("predictions")
