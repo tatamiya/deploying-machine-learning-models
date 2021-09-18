@@ -44,6 +44,7 @@ def get_logger(*, logger_name):
 
 class APISettings(BaseSettings):
     PROJECT_NAME: str = "House Price Prediction API"
+    VERSIONED_PREFIX: str = "/v1"
 
 
 settings = APISettings()
