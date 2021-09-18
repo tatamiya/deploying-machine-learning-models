@@ -11,3 +11,8 @@ app = FastAPI(title=settings.PROJECT_NAME, version=api_version)
 app.include_router(controller.router)
 
 _logger.debug("Application instance created")
+
+if __name__ == "__main__":
+    import uvicorn
+
+    uvicorn.run(app, host="0.0.0.0", port=5000, log_level="debug")
