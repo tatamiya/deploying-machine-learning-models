@@ -148,3 +148,6 @@ regression_model/regression_model/trained_models/*.pkl
 
 # CircleCI local execution
 process.yaml
+
+# VSCode config
+.vscode
