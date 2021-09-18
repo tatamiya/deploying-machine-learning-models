@@ -1,10 +1,13 @@
-from fastapi import APIRouter, Request
+from typing import List
+
+from fastapi import APIRouter
+from fastapi.encoders import jsonable_encoder
 from regression_model import __version__ as _version
 from regression_model.predict import make_prediction
 
 from api import __version__ as api_version
 from api.config import get_logger
-from api.validation import validate_inputs
+from api.schema import HouseData, PredictionResults, Version
 
 router = APIRouter(prefix="")
 
@@ -17,22 +20,18 @@ async def health():
     return "ok"
 
 
-@router.get("/version")
+@router.get("/version", response_model=Version)
 async def version():
     return {"model_version": _version, "api_version": api_version}
 
 
-@router.post("/v1/predict/regression")
-async def predict(request: Request):
-    # Step 1: Extract POST dtaa from request body as JSON
-    json_data = await request.json()
-    _logger.debug(f"Inputs: {json_data}")
+@router.post("/v1/predict/regression", response_model=PredictionResults)
+async def predict(data: List[HouseData]):
 
-    # Step 2: Validate the input using marshmallow schema
-    input_data, errors = validate_inputs(input_data=json_data)
+    _logger.debug(f"Inputs: {data}")
 
     # Step 3: Model prediction
-    result = make_prediction(input_data=input_data)
+    result = make_prediction(input_data=jsonable_encoder(data))
     _logger.debug(f"Outputs: {result}")
 
     # Step 4: Convert numpy array to list
@@ -40,4 +39,4 @@ async def predict(request: Request):
     version = result.get("version")
 
     # Step 5: Return the response as JSON
-    return {"predictions": predictions, "version": version, "errors": errors}
+    return {"predictions": predictions, "version": version}
