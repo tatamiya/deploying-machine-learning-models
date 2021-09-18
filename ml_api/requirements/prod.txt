@@ -3,7 +3,6 @@
 -r common.txt
 
 # Deployment
-gunicorn>=19.9.0
 uvicorn>=0.15.0
 
 # Install from gemfury
