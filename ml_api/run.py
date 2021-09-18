@@ -1,7 +1,6 @@
 from api.app import create_app
-from api.config import ProductionConfig
 
-application = create_app(config_object=ProductionConfig)
+application = create_app()
 
 if __name__ == "__main__":
     import uvicorn

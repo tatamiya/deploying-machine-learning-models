@@ -1,9 +1,9 @@
 import logging
-import os
 import pathlib
 import sys
 from logging.handlers import TimedRotatingFileHandler
-from typing import Union
+
+from pydantic import BaseSettings
 
 PACKAGE_ROOT = pathlib.Path(__file__).resolve().parent.parent
 
@@ -42,24 +42,8 @@ def get_logger(*, logger_name):
     return logger
 
 
-class Config:
-    DEBUG = False
-    TESTING = False
-    CSRF_ENABLED = True
-    SECRET_KEY = ""
-    SERVER_PORT: Union[str, int] = 5000
+class APISettings(BaseSettings):
+    PROJECT_NAME: str = "House Price Prediction API"
 
 
-class ProductionConfig(Config):
-    DEBUG = False
-    SERVER_ADDRESS = os.environ.get("SERVER_ADDRESS", "0.0.0.0")
-    SERVER_PORT = os.environ.get("SERVER_PORT", "5000")
-
-
-class DevelopmentConfig(Config):
-    DEVELOPMENT = True
-    DEBUG = True
-
-
-class TestingConfig(Config):
-    TESTING = True
+settings = APISettings()

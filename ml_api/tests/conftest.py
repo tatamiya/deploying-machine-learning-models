@@ -1,13 +1,11 @@
 import pytest
-from fastapi.testclient import TestClient
-
 from api.app import create_app
-from api.config import TestingConfig
+from fastapi.testclient import TestClient
 
 
 @pytest.fixture
 def app():
-    return create_app(config_object=TestingConfig)
+    return create_app()
 
 
 @pytest.fixture
