@@ -7,7 +7,11 @@ from api.config import get_logger, settings
 _logger = get_logger(logger_name=__name__)
 
 
-app = FastAPI(title=settings.PROJECT_NAME, version=api_version)
+app = FastAPI(
+    title=settings.PROJECT_NAME,
+    version=api_version,
+    openapi_url=f"{settings.VERSIONED_PREFIX}/openapi.json",
+)
 app.include_router(predict.router)
 
 
