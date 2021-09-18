@@ -10,6 +10,13 @@ _logger = get_logger(logger_name=__name__)
 app = FastAPI(title=settings.PROJECT_NAME, version=api_version)
 app.include_router(controller.router)
 
+
+@app.get("/health")
+async def health():
+    _logger.info("health status OK")
+    return "ok"
+
+
 _logger.debug("Application instance created")
 
 if __name__ == "__main__":

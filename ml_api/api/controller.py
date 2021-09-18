@@ -14,12 +14,6 @@ router = APIRouter(prefix="")
 _logger = get_logger(logger_name=__name__)
 
 
-@router.get("/health")
-async def health():
-    _logger.info("health status OK")
-    return "ok"
-
-
 @router.get("/version", response_model=Version)
 async def version():
     return {"model_version": _version, "api_version": api_version}
