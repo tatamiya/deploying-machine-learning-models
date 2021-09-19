@@ -122,3 +122,14 @@ class TestPredictionEndpoint:
         response_version = response_json["version"]
         assert prediction[0]
         assert response_version == _version
+
+    def test_endpoint_returns_422_for_invalid_typed_data(self, test_client):
+        # When
+        test_data = [self.test_data_template[0].copy()]
+        test_data[0]["OverallQual"] = "Invalid Input"  # must be int
+
+        # When
+        response = test_client.post("/v1/predict/regression", json=test_data)
+
+        # Then
+        assert response.status_code == 422
