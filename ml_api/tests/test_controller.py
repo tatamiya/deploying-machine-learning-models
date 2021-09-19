@@ -114,12 +114,12 @@ class TestPredictionEndpoint:
         response = test_client.post("/v1/predict/regression", json=test_data)
 
         # Then
-        assert response.status_code == 200
+        assert response.status_code == 200, response.json()
         response_json = response.json()
         prediction = response_json["predictions"]
         response_version = response_json["version"]
-        assert prediction[0]
-        assert response_version == _version
+        assert prediction[0], response.json()
+        assert response_version == _version, response.json()
 
     def test_endpoint_returns_422_for_invalid_typed_data(self, test_client):
         # When
@@ -131,4 +131,4 @@ class TestPredictionEndpoint:
         response = test_client.post("/v1/predict/regression", json=test_data)
 
         # Then
-        assert response.status_code == 422
+        assert response.status_code == 422, response.json()
