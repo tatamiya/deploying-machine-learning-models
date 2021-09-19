@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from api import __version__ as api_version
 from api import predict
@@ -13,6 +14,15 @@ app = FastAPI(
     openapi_url=f"{settings.VERSIONED_PREFIX}/openapi.json",
 )
 app.include_router(predict.router)
+
+if settings.BACKEND_CORS_ORIGINS:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[str(origin) for origin in settings.BACKEND_CORS_ORIGINS],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
 
 
 @app.get("/health")
