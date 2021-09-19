@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+
+    <title>Access ML API</title>
+</head>
+
+<body>
+    <script>
+        let requestURL = 'http://0.0.0.0:5000/v1/version';
+        let request = new XMLHttpRequest();
+        request.open('GET', requestURL);
+        request.responseType = 'json';
+        request.send();
+
+        request.onload = function () {
+            const versions = request.response;
+
+            para = document.createElement('p')
+            para.textContent = 'model version: ' + versions.model_version + ', API version: ' + versions.api_version;
+
+            const body = document.querySelector('body');
+            body.appendChild(para)
+        }
+
+    </script>
+</body>
+
+</html>
