@@ -23,9 +23,8 @@ def test_version_endpoint_returns_version(test_client):
     assert response_json["api_version"] == api_version
 
 
-def test_prediction_endpoint_returns_prediction(test_client):
-    # When
-    test_data = [
+class TestPredictionEndpoint:
+    test_data_template = [
         {
             "Id": 1461,
             "MSSubClass": 20,
@@ -110,13 +109,16 @@ def test_prediction_endpoint_returns_prediction(test_client):
         },
     ]
 
-    # When
-    response = test_client.post("/v1/predict/regression", json=test_data)
+    def test_endpoint_returns_prediction_correctly(self, test_client):
+        # When
+        test_data = self.test_data_template
+        # When
+        response = test_client.post("/v1/predict/regression", json=test_data)
 
-    # Then
-    assert response.status_code == 200
-    response_json = response.json()
-    prediction = response_json["predictions"]
-    response_version = response_json["version"]
-    assert prediction[0]
-    assert response_version == _version
+        # Then
+        assert response.status_code == 200
+        response_json = response.json()
+        prediction = response_json["predictions"]
+        response_version = response_json["version"]
+        assert prediction[0]
+        assert response_version == _version
