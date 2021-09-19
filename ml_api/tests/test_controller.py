@@ -121,11 +121,13 @@ class TestPredictionEndpoint:
         assert prediction[0], response.json()
         assert response_version == _version, response.json()
 
-    def test_endpoint_returns_422_for_invalid_typed_data(self, test_client):
+    def test_endpoint_returns_422_when_input_contains_invalid_typed_data(
+        self, test_client
+    ):
         # When
         test_element = self.test_element_template.copy()
         test_element["OverallQual"] = "Invalid Input"  # must be int
-        test_data = [test_element]
+        test_data = [self.test_element_template, test_element]
 
         # When
         response = test_client.post("/v1/predict/regression", json=test_data)
