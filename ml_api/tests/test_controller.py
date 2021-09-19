@@ -121,6 +121,22 @@ class TestPredictionEndpoint:
         assert prediction[0], response.json()
         assert response_version == _version, response.json()
 
+    def test_endpoint_returns_prediction_correctly_for_multiple_input_data(
+        self, test_client
+    ):
+        # When
+        test_data = [self.test_element_template] * 5
+
+        # When
+        response = test_client.post("/v1/predict/regression", json=test_data)
+
+        # Then
+        assert response.status_code == 200, response.json()
+
+        response_json = response.json()
+        prediction = response_json["predictions"]
+        assert len(prediction) == 5
+
     def test_endpoint_returns_422_when_input_contains_invalid_typed_data(
         self, test_client
     ):
